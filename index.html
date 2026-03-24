@@ -143,7 +143,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .ex-row:last-child { border-bottom: none; }
 .ex-row.checked { background: rgba(74,222,128,0.05); }
 .ex-num { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: var(--muted); flex-shrink: 0; }
-.ex-row.checked .ex-num { background: var(--green); color: #000; }
+.ex-row.checked .ex-num { background: #22c55e; color: #fff; font-weight: 700; }
 .ex-info { min-width: 0; }
 .ex-name { font-size: 14px; font-weight: 500; color: var(--text); }
 .ex-name a { color: var(--blue); text-decoration: none; }
@@ -152,12 +152,12 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .ex-sets { font-size: 12px; color: var(--accent2); font-weight: 500; white-space: nowrap; text-align: right; }
 .ex-check {
   width: 28px; height: 28px; border-radius: 50%;
-  border: 1.5px solid var(--border); cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.55); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; flex-shrink: 0; background: var(--surface2);
-  transition: all .2s;
+  font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.12);
+  transition: all .2s; color: transparent;
 }
-.ex-check.done { background: var(--green); border-color: var(--green); }
+.ex-check.done { background: #22c55e; border-color: #22c55e; color: #fff; font-weight: 700; box-shadow: 0 0 0 3px rgba(34,197,94,0.25); }
 
 /* FINISH BTN */
 .finish-btn {
@@ -271,6 +271,36 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 
 @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
 .screen.active { animation: fadeIn .2s ease; }
+
+/* STRAVA */
+.strava-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 8px 20px 0; padding: 12px;
+  background: #FC4C02; color: #fff;
+  border: none; border-radius: 12px;
+  font-family: 'Bebas Neue', sans-serif; font-size: 18px;
+  letter-spacing: .5px; cursor: pointer; width: calc(100% - 40px);
+  transition: opacity .2s;
+}
+.strava-btn:active { opacity: .8; }
+.strava-btn.connected { background: #2d2d2d; border: 1.5px solid #FC4C02; color: #FC4C02; }
+.strava-status { font-size: 11px; color: var(--muted); text-align: center; margin: 6px 20px 16px; }
+.strava-uploading { font-size: 12px; color: #FC4C02; text-align: center; padding: 6px 20px; font-style: italic; }
+
+
+/* EXPORT / IMPORT */
+.data-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.export-btn {
+  padding: 12px; border-radius: 12px; font-family: 'Bebas Neue', sans-serif;
+  font-size: 17px; letter-spacing: .5px; cursor: pointer; text-align: center;
+  border: none; transition: opacity .2s;
+}
+.export-btn:active { opacity: .8; }
+.export-btn.download { background: var(--accent); color: #000; }
+.export-btn.import  { background: var(--surface2); color: var(--accent); border: 1.5px solid var(--accent); }
+.data-info { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.5; text-align: center; }
+.import-success { font-size: 12px; color: var(--green); text-align: center; margin-top: 8px; display: none; }
+
 </style>
 </head>
 <body>
@@ -288,6 +318,11 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
     </div>
   </div>
 
+  <!-- STRAVA BAR -->
+  <div id="stravaConnectBar" style="background:#1a1a1a;border-bottom:.5px solid rgba(252,76,2,0.2);padding:7px 16px;display:none;align-items:center;justify-content:space-between">
+    <span style="font-size:11px;color:#888">Strava niet verbonden</span>
+    <button onclick="stravaConnect()" style="padding:4px 12px;background:#FC4C02;border:none;border-radius:8px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:13px;cursor:pointer;letter-spacing:.5px">Verbinden ↗</button>
+  </div>
   <!-- CONTENT -->
   <div class="content">
 
@@ -397,7 +432,23 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
         <div class="pr-card"><div class="pr-ex">Push-ups</div><div class="pr-val">—</div><div class="pr-delta">Max reps</div></div>
         <div class="pr-card"><div class="pr-ex">Workouts totaal</div><div class="pr-val" id="prWorkouts">0</div><div class="pr-delta">Voltooid</div></div>
       </div>
-    </div>
+  
+      <!-- DATA BACKUP -->
+      <div class="card" style="margin-top:8px">
+        <div class="sect-title">Data backup</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">
+          Exporteer je workouthistorie als back-up. Importeer om data te herstellen na herinstallatie.
+        </div>
+        <div class="data-actions">
+          <button class="export-btn download" onclick="exportData()">↓ Exporteer</button>
+          <button class="export-btn import" onclick="document.getElementById('importFile').click()">↑ Importeer</button>
+        </div>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        <div class="data-info" id="dataInfo"></div>
+        <div class="import-success" id="importSuccess">✓ Data succesvol hersteld!</div>
+      </div>
+
+  </div>
 
   </div><!-- /content -->
 
@@ -625,7 +676,7 @@ function showScreen(id, btn) {
   document.getElementById('screen-' + id).classList.add('active');
   btn.classList.add('active');
   if (id === 'logboek') { showLogTab('trainingen', document.querySelector('.log-tab')); }
-  if (id === 'progressie') updateProgressie();
+  if (id === 'progressie') { updateProgressie(); updateDataInfo(); }
   if (id === 'benchmark') renderBmCards();
 }
 
@@ -767,17 +818,41 @@ function finishWorkout() {
     done: done,
     total: total
   });
+  const completedWorkout = {
+    date: state.activeDay,
+    weekKey: getWeekKey(),
+    phase: state.activePhaseIdx,
+    workoutIdx: state.activeWorkoutIdx,
+    done: done,
+    total: total
+  };
   state.exChecks = {};
   state.activeDay = null;
   save();
   renderVandaag();
   renderWeekGrid();
+
+  // Show completion screen
+  const stravaConnected = isStravaConnected();
   document.getElementById('workoutArea').innerHTML = `
     <div class="select-prompt">
       <img src="${document.getElementById('monkeyLogo').src}" class="prompt-monkey">
       <div class="prompt-title">YES! Workout gedaan! 💪</div>
       <div class="prompt-sub">Geweldig werk. Kies morgen een nieuwe dag om door te gaan.</div>
+      ${stravaConnected
+        ? '<div class="strava-uploading" id="stravaStatus">Uploaden naar Strava...</div>'
+        : '<button class="strava-btn" onclick="stravaConnect()">🟠 Verbind met Strava</button><div class="strava-status">Upload je workouts automatisch naar Strava</div>'
+      }
     </div>`;
+
+  // Upload to Strava if connected
+  if (stravaConnected) {
+    uploadToStrava(completedWorkout, state.exChecks).then(success => {
+      const el = document.getElementById('stravaStatus');
+      if (el) el.textContent = success ? '✓ Geüpload naar Strava!' : 'Strava upload mislukt — probeer later opnieuw.';
+      if (el) el.style.color = success ? '#22c55e' : '#888';
+    });
+  }
 }
 
 // ─── BENCHMARK ──────────────────────────────────────────────────
@@ -970,7 +1045,7 @@ async function sendChat() {
     ? `Laatste benchmark: diamond push-ups ${state.bmLog[state.bmLog.length-1]['Diamond push-ups']||'?'} reps, pull-ups ${state.bmLog[state.bmLog.length-1]['Pull-ups']||'?'} reps.`
     : 'Nog geen benchmark.';
   try {
-    const res = await fetch('/api/claude', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 300,
         system: `Je bent de AI-coach van "Trainen met Passie". Sporter traint puur met lichaamsgewicht + pull-up bar thuis. Doel: 75→78 kg spiermassa. Schema: 4x/week, 60 min (15 warmup + 45 hoofd). Focus: borst, rug, schouders, biceps, triceps. 3-maandsplan. ${bmSummary} Totaal ${state.workouts.length} workouts gedaan. Antwoord Nederlands, max 3 zinnen, concreet en motiverend.`,
@@ -988,7 +1063,7 @@ async function loadMotiv() {
   const key = 'motiv_' + new Date().toDateString();
   try { const c = localStorage.getItem(key); if (c) { el.textContent = c; return; } } catch(e){}
   try {
-    const res = await fetch('/api/claude', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 80,
         messages: [{ role: 'user', content: 'Geef één motiverende zin (max 18 woorden) voor iemand die vandaag thuis gaat trainen met lichaamsgewicht om van 75 naar 78 kg spiermassa te groeien. Geen aanhef. Nederlands.' }]})
@@ -1011,6 +1086,232 @@ document.getElementById('workoutArea').innerHTML = `
 renderVandaag();
 renderTrainingen();
 loadMotiv();
+
+// ─── STRAVA INTEGRATION ──────────────────────────────────────
+const STRAVA_CLIENT_ID = ''; // wordt ingevuld via Netlify env
+const STRAVA_REDIRECT = window.location.origin + '/strava-callback';
+
+function stravaConnect() {
+  const scope = 'activity:write,activity:read_all';
+  const url = `https://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${encodeURIComponent(STRAVA_REDIRECT)}&response_type=code&scope=${scope}`;
+  window.location.href = url;
+}
+
+function getStravaToken() {
+  try { return localStorage.getItem('strava_token'); } catch(e) { return null; }
+}
+
+function isStravaConnected() {
+  return !!getStravaToken();
+}
+
+function updateStravaUI() {
+  const bar = document.getElementById('stravaConnectBar');
+  if (!bar) return;
+  if (isStravaConnected()) {
+    bar.style.display = 'flex';
+    bar.innerHTML = '<span style="font-size:12px;color:#FC4C02;font-weight:500">✓ Strava verbonden</span><button onclick="stravaDisconnect()" style="padding:5px 10px;background:none;border:1px solid #444;border-radius:8px;color:#888;font-size:11px;cursor:pointer">Loskoppelen</button>';
+  } else {
+    bar.style.display = 'flex';
+  }
+}
+
+function stravaDisconnect() {
+  try { localStorage.removeItem('strava_token'); localStorage.removeItem('strava_athlete'); } catch(e) {}
+  updateStravaUI();
+}
+
+async function uploadToStrava(workoutData, exChecks) {
+  const token = getStravaToken();
+  if (!token) return false;
+
+  const phase = PHASES[workoutData.phase];
+  const workout = phase.workouts[workoutData.workoutIdx];
+  const durationSeconds = 60 * 60; // 60 minuten
+
+  // Build activity description with all completed exercises
+  const warmupLines = WARMUP.map((ex, i) =>
+    exChecks?.['w'+i] ? `✓ ${ex.n} ${ex.s}` : `○ ${ex.n} ${ex.s}`
+  ).join('\n');
+
+  const mainLines = workout.exercises.map((ex, i) =>
+    exChecks?.['m'+i] ? `✓ ${ex.n} ${ex.s}` : `○ ${ex.n} ${ex.s}`
+  ).join('\n');
+
+  const desc = [
+    `${phase.name} · ${phase.period}`,
+    `${workout.name} — ${workout.focus}`,
+    `Oefeningen: ${workoutData.done}/${workoutData.total} afgerond`,
+    '',
+    '── Warming up (15 min) ──',
+    warmupLines,
+    '',
+    `── Hoofdtraining (45 min) · ${workout.focus} ──`,
+    mainLines,
+    '',
+    'Trainen met Passie 💪',
+    '21 days is a habit · 90 days is a lifestyle'
+  ].join('\n');
+
+  const activityData = {
+    name: `Trainen met Passie — ${workout.name}`,
+    type: 'WeightTraining',
+    start_date_local: new Date().toISOString(),
+    elapsed_time: durationSeconds,
+    description: desc,
+    trainer: 1,
+    commute: 0
+  };
+
+  try {
+    const res = await fetch('/api/strava', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, activity: activityData })
+    });
+    const data = await res.json();
+    return data && data.id ? true : false;
+  } catch(e) {
+    console.error('Strava upload failed:', e);
+    return false;
+  }
+}
+
+// Check for Strava OAuth callback
+function checkStravaCallback() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  if (!code) return;
+
+  // Exchange code for token via our proxy
+  fetch('/api/strava-auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code })
+  }).then(r => r.json()).then(data => {
+    if (data.access_token) {
+      try {
+        localStorage.setItem('strava_token', data.access_token);
+        localStorage.setItem('strava_athlete', JSON.stringify(data.athlete));
+      } catch(e) {}
+      // Clean URL
+      window.history.replaceState({}, '', window.location.pathname);
+      updateStravaUI();
+      alert('Strava succesvol verbonden! Je workouts worden voortaan automatisch geüpload.');
+    }
+  }).catch(e => console.error('Strava auth error:', e));
+}
+
+checkStravaCallback();
+setTimeout(updateStravaUI, 100);
+
+
+// ─── DATA EXPORT / IMPORT ────────────────────────────────────
+function exportData() {
+  const data = {
+    version: 2,
+    exportDate: new Date().toISOString(),
+    appName: 'Trainen met Passie',
+    state: state
+  };
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const dateStr = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `trainen-met-passie-backup-${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  // Update info label
+  const info = document.getElementById('dataInfo');
+  if (info) {
+    const workouts = state.workouts?.length || 0;
+    info.textContent = `Geëxporteerd: ${workouts} workouts · ${dateStr}`;
+  }
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      // Validate it's a valid backup
+      if (!data.state || !data.appName) {
+        alert('Ongeldig bestand. Gebruik een exportbestand van Trainen met Passie.');
+        return;
+      }
+
+      // Merge strategy: keep most workouts (take the one with more data)
+      const incoming = data.state;
+      const currentWorkouts = state.workouts?.length || 0;
+      const incomingWorkouts = incoming.workouts?.length || 0;
+
+      if (currentWorkouts > 0 && incomingWorkouts > 0) {
+        // Merge: combine both workout arrays, deduplicate by date+workoutIdx
+        const merged = [...state.workouts];
+        incoming.workouts.forEach(w => {
+          const exists = merged.some(m => m.date === w.date && m.workoutIdx === w.workoutIdx);
+          if (!exists) merged.push(w);
+        });
+        incoming.workouts = merged.sort((a, b) => a.date > b.date ? 1 : -1);
+
+        // Merge weight logs too
+        if (incoming.weightLog && state.weightLog) {
+          const mergedW = [...state.weightLog];
+          incoming.weightLog.forEach(w => {
+            if (!mergedW.some(m => m.date === w.date)) mergedW.push(w);
+          });
+          incoming.weightLog = mergedW;
+        }
+
+        // Merge bmLog
+        if (incoming.bmLog && state.bmLog) {
+          const mergedB = [...state.bmLog];
+          incoming.bmLog.forEach(b => {
+            if (!mergedB.some(m => m.date === b.date)) mergedB.push(b);
+          });
+          incoming.bmLog = mergedB;
+        }
+      }
+
+      state = incoming;
+      save();
+      renderVandaag();
+
+      // Show success
+      const success = document.getElementById('importSuccess');
+      if (success) { success.style.display = 'block'; setTimeout(() => success.style.display = 'none', 3000); }
+
+      const info = document.getElementById('dataInfo');
+      if (info) info.textContent = `Hersteld: ${state.workouts?.length || 0} workouts · ${data.exportDate?.slice(0,10) || ''}`;
+
+      // Reset file input
+      event.target.value = '';
+
+    } catch(err) {
+      alert('Fout bij importeren: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// Show data stats when progressie screen opens
+function updateDataInfo() {
+  const info = document.getElementById('dataInfo');
+  if (!info) return;
+  const workouts = state.workouts?.length || 0;
+  const lastDate = workouts > 0 ? state.workouts[workouts-1].date : '—';
+  info.textContent = `${workouts} workouts opgeslagen · Laatste: ${lastDate}`;
+}
+
 </script>
 </body>
 </html>
