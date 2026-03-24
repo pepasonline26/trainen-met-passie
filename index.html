@@ -710,20 +710,32 @@ function renderWeekGrid() {
     const d = new Date(today);
     d.setDate(today.getDate() - today.getDay() + i + 1); // Mon-Sun
     const dateStr = d.getDate() + ' ' + MONTHS_NL[d.getMonth()];
+    // Use full ISO date (YYYY-MM-DD) for accurate comparison across years/weeks
+    const isoDate = d.toISOString().slice(0, 10);
     const isToday = d.toDateString() === today.toDateString();
-    const isDone = state.workouts.some(w => w.date === dateStr);
+    // Match on isoDate if available, fall back to legacy dateStr for old workouts
+    const isDone = state.workouts.some(w =>
+      w.isoDate ? w.isoDate === isoDate : w.date === dateStr && isSameWeek(w, d)
+    );
     const el = document.createElement('div');
     el.className = 'day-dot' + (isToday ? ' active-day' : '') + (isDone ? ' done' : '');
     el.innerHTML = `<span>${DAYS_NL[(d.getDay())]}</span>`;
     if (!isDone) {
-      el.onclick = () => selectDay(dateStr, i, el);
+      el.onclick = () => selectDay(dateStr, isoDate, i, el);
     }
     grid.appendChild(el);
   }
 }
 
-function selectDay(dateStr, dayIdx, el) {
+function isSameWeek(workout, dayInGrid) {
+  // For legacy workouts without isoDate: check weekKey matches current week
+  const currentWeekKey = getWeekKey();
+  return workout.weekKey === currentWeekKey;
+}
+
+function selectDay(dateStr, isoDate, dayIdx, el) {
   state.activeDay = dateStr;
+  state.activeDayIso = isoDate;
   document.querySelectorAll('.day-dot').forEach(d => d.classList.remove('active-day'));
   el.classList.add('active-day');
   const total = state.workouts.length;
@@ -820,6 +832,7 @@ function finishWorkout() {
   });
   const completedWorkout = {
     date: state.activeDay,
+    isoDate: state.activeDayIso || new Date().toISOString().slice(0, 10),
     weekKey: getWeekKey(),
     phase: state.activePhaseIdx,
     workoutIdx: state.activeWorkoutIdx,
