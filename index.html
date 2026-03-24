@@ -1088,12 +1088,47 @@ renderTrainingen();
 loadMotiv();
 
 // ─── STRAVA INTEGRATION ──────────────────────────────────────
-const STRAVA_CLIENT_ID = ''; // wordt ingevuld via Netlify env
-const STRAVA_REDIRECT = window.location.origin + '/strava-callback';
+let STRAVA_CLIENT_ID = '';
+const STRAVA_REDIRECT = window.location.origin;
 
-function stravaConnect() {
+// Fetch Client ID from server on load
+let stravaConfigReady = false;
+
+async function loadStravaConfig() {
+  try {
+    const res = await fetch('/api/strava-config');
+    const data = await res.json();
+    if (data.clientId) {
+      STRAVA_CLIENT_ID = String(data.clientId).trim();
+      stravaConfigReady = true;
+      console.log('Strava config loaded:', STRAVA_CLIENT_ID);
+    }
+  } catch(e) {
+    console.warn('Strava config not available:', e);
+  }
+}
+
+async function stravaConnect() {
+  // If not loaded yet, fetch it now and wait
+  if (!stravaConfigReady) {
+    await loadStravaConfig();
+  }
+
+  if (!STRAVA_CLIENT_ID) {
+    alert('Kan Strava-configuratie niet laden. Controleer je internetverbinding en probeer opnieuw.');
+    return;
+  }
+
   const scope = 'activity:write,activity:read_all';
-  const url = `https://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${encodeURIComponent(STRAVA_REDIRECT)}&response_type=code&scope=${scope}`;
+  const redirectUri = window.location.origin + window.location.pathname;
+  const url = 'https://www.strava.com/oauth/authorize'
+    + '?client_id=' + encodeURIComponent(STRAVA_CLIENT_ID)
+    + '&redirect_uri=' + encodeURIComponent(redirectUri)
+    + '&response_type=code'
+    + '&approval_prompt=auto'
+    + '&scope=' + scope;
+
+  console.log('Strava connect URL:', url);
   window.location.href = url;
 }
 
@@ -1202,8 +1237,10 @@ function checkStravaCallback() {
   }).catch(e => console.error('Strava auth error:', e));
 }
 
-checkStravaCallback();
-setTimeout(updateStravaUI, 100);
+loadStravaConfig().then(() => {
+  checkStravaCallback();
+  setTimeout(updateStravaUI, 100);
+});
 
 
 // ─── DATA EXPORT / IMPORT ────────────────────────────────────
