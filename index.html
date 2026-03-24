@@ -301,6 +301,20 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .data-info { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.5; text-align: center; }
 .import-success { font-size: 12px; color: var(--green); text-align: center; margin-top: 8px; display: none; }
 
+
+/* STRAVA LOG UPLOAD */
+.log-strava-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-top: 6px; padding: 5px 10px;
+  background: none; border: 1px solid #FC4C02;
+  border-radius: 20px; color: #FC4C02;
+  font-size: 11px; font-weight: 500; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; transition: all .2s;
+}
+.log-strava-btn:active { background: rgba(252,76,2,0.1); }
+.log-strava-btn.uploaded { border-color: var(--green); color: var(--green); cursor: default; }
+.log-strava-btn.uploading { opacity: .6; cursor: default; }
+
 </style>
 </head>
 <body>
@@ -953,9 +967,18 @@ function renderTrainingen() {
     el.innerHTML = '<div class="log-entry"><div class="log-dot"></div><div><div class="log-name" style="color:var(--muted)">Nog geen workouts afgerond</div></div></div>';
     return;
   }
-  el.innerHTML = [...state.workouts].reverse().slice(0,20).map(w => {
+  const reversed = [...state.workouts].reverse().slice(0, 20);
+  el.innerHTML = reversed.map((w, i) => {
     const phase = PHASES[w.phase];
     const workout = phase.workouts[w.workoutIdx];
+    const realIdx = state.workouts.length - 1 - i;
+    const stravaConnected = isStravaConnected();
+    const alreadyUploaded = w.stravaUploaded;
+    const stravaBtn = stravaConnected
+      ? alreadyUploaded
+        ? `<button class="log-strava-btn uploaded" disabled>✓ Op Strava</button>`
+        : `<button class="log-strava-btn" onclick="uploadLogWorkout(${realIdx}, this)">🟠 Upload naar Strava</button>`
+      : '';
     return `<div class="log-entry">
       <div class="log-dot"></div>
       <div class="log-date">${w.date}</div>
@@ -963,6 +986,7 @@ function renderTrainingen() {
         <div class="log-name">${workout.name}</div>
         <div class="log-detail">${phase.name} · ${w.done}/${w.total} oefeningen</div>
         <div class="log-pr">${workout.focus}</div>
+        ${stravaBtn}
       </div>
     </div>`;
   }).join('');
@@ -1360,6 +1384,86 @@ function updateDataInfo() {
   const workouts = state.workouts?.length || 0;
   const lastDate = workouts > 0 ? state.workouts[workouts-1].date : '—';
   info.textContent = `${workouts} workouts opgeslagen · Laatste: ${lastDate}`;
+}
+
+
+// ─── UPLOAD HISTORIC WORKOUT TO STRAVA ───────────────────────
+async function uploadLogWorkout(workoutIdx, btn) {
+  if (!isStravaConnected()) {
+    alert('Verbind eerst met Strava.');
+    return;
+  }
+
+  btn.classList.add('uploading');
+  btn.textContent = 'Uploaden...';
+  btn.disabled = true;
+
+  const w = state.workouts[workoutIdx];
+  const phase = PHASES[w.phase];
+  const workout = phase.workouts[w.workoutIdx];
+
+  // Build exercise list for description
+  const warmupLines = WARMUP.map(ex => `✓ ${ex.n} ${ex.s}`).join('\n');
+  const mainLines = workout.exercises.map(ex => `✓ ${ex.n} ${ex.s}`).join('\n');
+
+  const desc = [
+    `${phase.name} · ${phase.period}`,
+    `${workout.name} — ${workout.focus}`,
+    `Oefeningen: ${w.done}/${w.total} afgerond`,
+    '',
+    '── Warming up (15 min) ──',
+    warmupLines,
+    '',
+    `── Hoofdtraining (45 min) · ${workout.focus} ──`,
+    mainLines,
+    '',
+    'Trainen met Passie 💪',
+    '21 days is a habit · 90 days is a lifestyle'
+  ].join('\n');
+
+  // Use stored isoDate if available, otherwise derive from date string
+  const startDate = w.isoDate
+    ? w.isoDate + 'T08:00:00'
+    : new Date().toISOString();
+
+  const activityData = {
+    name: `Trainen met Passie — ${workout.name}`,
+    type: 'WeightTraining',
+    start_date_local: startDate,
+    elapsed_time: 3600,
+    description: desc,
+    trainer: 1,
+    commute: 0
+  };
+
+  const token = getStravaToken();
+  try {
+    const res = await fetch('/api/strava', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, activity: activityData })
+    });
+    const data = await res.json();
+
+    if (data && data.id) {
+      // Mark as uploaded in state
+      state.workouts[workoutIdx].stravaUploaded = true;
+      save();
+      btn.classList.remove('uploading');
+      btn.classList.add('uploaded');
+      btn.textContent = '✓ Op Strava';
+    } else {
+      btn.classList.remove('uploading');
+      btn.textContent = '✗ Mislukt — probeer opnieuw';
+      btn.disabled = false;
+      console.error('Strava error:', data);
+    }
+  } catch(e) {
+    btn.classList.remove('uploading');
+    btn.textContent = '✗ Mislukt — probeer opnieuw';
+    btn.disabled = false;
+    console.error('Strava upload error:', e);
+  }
 }
 
 </script>
