@@ -1082,7 +1082,7 @@ async function sendChat() {
     ? `Laatste benchmark: diamond push-ups ${state.bmLog[state.bmLog.length-1]['Diamond push-ups']||'?'} reps, pull-ups ${state.bmLog[state.bmLog.length-1]['Pull-ups']||'?'} reps.`
     : 'Nog geen benchmark.';
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/claude', {
       method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 300,
         system: `Je bent de AI-coach van "Trainen met Passie". Sporter traint puur met lichaamsgewicht + pull-up bar thuis. Doel: 75→78 kg spiermassa. Schema: 4x/week, 60 min (15 warmup + 45 hoofd). Focus: borst, rug, schouders, biceps, triceps. 3-maandsplan. ${bmSummary} Totaal ${state.workouts.length} workouts gedaan. Antwoord Nederlands, max 3 zinnen, concreet en motiverend.`,
@@ -1100,7 +1100,7 @@ async function loadMotiv() {
   const key = 'motiv_' + new Date().toDateString();
   try { const c = localStorage.getItem(key); if (c) { el.textContent = c; return; } } catch(e){}
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/claude', {
       method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 80,
         messages: [{ role: 'user', content: 'Geef één motiverende zin (max 18 woorden) voor iemand die vandaag thuis gaat trainen met lichaamsgewicht om van 75 naar 78 kg spiermassa te groeien. Geen aanhef. Nederlands.' }]})
