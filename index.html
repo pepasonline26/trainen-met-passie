@@ -703,14 +703,28 @@ function renderVandaag() {
   document.getElementById('statWeek').textContent = thisWeek + '/4';
   const lastKg = state.weightLog[state.weightLog.length - 1]?.kg || 75;
   document.getElementById('statKg').textContent = lastKg;
-  // streak
+  // streak — use isoDate (YYYY-MM-DD) for reliable date parsing
   let streak = 0;
-  const dates = [...new Set(state.workouts.map(w => w.date))].sort().reverse();
   const today = new Date(); today.setHours(0,0,0,0);
-  for (let i = 0; i < dates.length; i++) {
-    const d = new Date(dates[i]);
-    const diff = Math.round((today - d) / 86400000);
-    if (diff <= i + 1) streak++; else break;
+
+  // Collect unique training days as Date objects, sorted newest first
+  const trainingDays = [...new Set(
+    state.workouts
+      .filter(w => w.isoDate)
+      .map(w => w.isoDate)
+  )].sort().reverse().map(iso => {
+    const d = new Date(iso); d.setHours(0,0,0,0); return d;
+  });
+
+  // Count consecutive days going back from today (or yesterday)
+  for (let i = 0; i < trainingDays.length; i++) {
+    const diff = Math.round((today - trainingDays[i]) / 86400000);
+    // Allow today (diff=0) or consecutive days (diff = i+1 accounting for gaps)
+    if (diff <= streak + 1) {
+      streak++;
+    } else {
+      break;
+    }
   }
   document.getElementById('streakNum').textContent = streak;
   renderWeekGrid();
