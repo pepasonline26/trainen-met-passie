@@ -483,26 +483,59 @@ document.getElementById('monkeyLogo').src = 'data:image/gif;base64,R0lGODlhSAEsA
 
 // ─── DATA ───────────────────────────────────────────────────────
 const YOUTUBE = {
-  'Push-ups':'https://www.youtube.com/watch?v=IODxDxX7oi4',
-  'Diamond push-ups':'https://www.youtube.com/watch?v=J0DXe9js1gs',
-  'Pike push-ups':'https://www.youtube.com/watch?v=sposDXWEB0A',
-  'Decline push-ups':'https://www.youtube.com/watch?v=SKRmDLQNBIo',
-  'Wide push-ups':'https://www.youtube.com/watch?v=IODxDxX7oi4',
-  'Archer push-ups':'https://www.youtube.com/watch?v=3MvsPQVBDZc',
-  'Pull-ups':'https://www.youtube.com/watch?v=eGo4IYlbE5g',
-  'Chin-ups':'https://www.youtube.com/watch?v=sIiogEvmVsI',
-  'Negative pull-ups':'https://www.youtube.com/watch?v=eGo4IYlbE5g',
-  'Dead hangs':'https://www.youtube.com/watch?v=6TcflsKjcUg',
-  'Scapular pull-ups':'https://www.youtube.com/watch?v=T8RYwbAFnG0',
-  'Inverted rows':'https://www.youtube.com/watch?v=LR2EnFWpWEg',
-  'Dips':'https://www.youtube.com/watch?v=2z8JmcrW-As',
-  'Plank':'https://www.youtube.com/watch?v=ASdvN_XEl_c',
-  'Hollow body hold':'https://www.youtube.com/watch?v=LlDNef_Ztsc',
-  'Mountain climbers':'https://www.youtube.com/watch?v=nmwgirgXLYM',
-  'Superman holds':'https://www.youtube.com/watch?v=z6PJMT2y8GQ',
-  'Shoulder taps':'https://www.youtube.com/watch?v=LEZq7QcKoMc',
-  'L-sit':'https://www.youtube.com/watch?v=16a529mtX68',
-  'Tricep push-ups':'https://www.youtube.com/watch?v=IODxDxX7oi4'
+  'Push-ups': 'https://www.youtube.com/results?search_query=push%20up%20correct%20form%20tutorial',
+  'Diamond push-ups': 'https://www.youtube.com/results?search_query=diamond%20push%20ups%20tutorial%20form',
+  'Pike push-ups': 'https://www.youtube.com/results?search_query=pike%20push%20up%20tutorial%20shoulder%20exercise',
+  'Decline push-ups': 'https://www.youtube.com/results?search_query=decline%20push%20up%20upper%20chest%20tutorial',
+  'Wide push-ups': 'https://www.youtube.com/results?search_query=wide%20grip%20push%20up%20tutorial%20chest',
+  'Archer push-ups': 'https://www.youtube.com/results?search_query=archer%20push%20up%20tutorial%20how%20to',
+  'Tricep push-ups': 'https://www.youtube.com/results?search_query=tricep%20push%20up%20close%20grip%20tutorial',
+  'Pull-ups': 'https://www.youtube.com/results?search_query=pull%20up%20correct%20form%20tutorial%20beginners',
+  'Chin-ups': 'https://www.youtube.com/results?search_query=chin%20up%20tutorial%20underhand%20grip',
+  'Negative pull-ups': 'https://www.youtube.com/results?search_query=negative%20pull%20ups%20how%20to%20tutorial%20beginners',
+  'Dead hangs': 'https://www.youtube.com/results?search_query=dead%20hang%20bar%20tutorial%20shoulder%20health',
+  'Scapular pull-ups': 'https://www.youtube.com/results?search_query=scapular%20pull%20ups%20tutorial%20shoulder%20activation',
+  'Inverted rows': 'https://www.youtube.com/results?search_query=inverted%20row%20tutorial%20how%20to',
+  'Dips': 'https://www.youtube.com/results?search_query=tricep%20dips%20tutorial%20correct%20form',
+  'Plank': 'https://www.youtube.com/results?search_query=plank%20correct%20form%20tutorial%20core',
+  'Hollow body hold': 'https://www.youtube.com/results?search_query=hollow%20body%20hold%20tutorial%20gymnastics%20core',
+  'Mountain climbers': 'https://www.youtube.com/results?search_query=mountain%20climbers%20exercise%20tutorial',
+  'Superman holds': 'https://www.youtube.com/results?search_query=superman%20hold%20exercise%20lower%20back%20tutorial',
+  'Shoulder taps': 'https://www.youtube.com/results?search_query=shoulder%20tap%20plank%20exercise%20tutorial',
+  'L-sit': 'https://www.youtube.com/results?search_query=L-sit%20tutorial%20how%20to%20learn',
+  'Air squats': 'https://www.youtube.com/results?search_query=air%20squat%20correct%20form%20tutorial',
+  'Asian squat hold': 'https://www.youtube.com/results?search_query=asian%20squat%20deep%20squat%20mobility%20tutorial',
+  'World's greatest stretch': 'https://www.youtube.com/results?search_query=worlds%20greatest%20stretch%20tutorial%20mobility',
+  'Hip circles': 'https://www.youtube.com/results?search_query=hip%20circles%20mobility%20warm%20up%20tutorial',
+  'Lunge met rotatie': 'https://www.youtube.com/results?search_query=lunge%20with%20rotation%20mobility%20exercise%20tutorial',
+  'Squat to stand': 'https://www.youtube.com/results?search_query=squat%20to%20stand%20mobility%20exercise%20tutorial',
+  'Lateral leg swings': 'https://www.youtube.com/results?search_query=lateral%20leg%20swings%20warm%20up%20mobility%20tutorial',
+  'Ankle circles': 'https://www.youtube.com/results?search_query=ankle%20circles%20mobility%20warm%20up%20tutorial',
+  'Inchworm': 'https://www.youtube.com/results?search_query=inchworm%20exercise%20tutorial%20warm%20up',
+  'Cat-cow': 'https://www.youtube.com/results?search_query=cat%20cow%20spine%20mobility%20exercise%20tutorial',
+  'Thoracic rotaties': 'https://www.youtube.com/results?search_query=thoracic%20rotation%20mobility%20exercise%20tutorial',
+  'Bear crawl': 'https://www.youtube.com/results?search_query=bear%20crawl%20exercise%20tutorial%20core',
+  'Hip 90/90 stretch': 'https://www.youtube.com/results?search_query=hip%2090%2090%20stretch%20mobility%20tutorial',
+  'Spiderman stretch': 'https://www.youtube.com/results?search_query=spiderman%20stretch%20mobility%20tutorial',
+  'Arm circles': 'https://www.youtube.com/results?search_query=arm%20circles%20shoulder%20warm%20up%20tutorial',
+  'Bar hang': 'https://www.youtube.com/results?search_query=bar%20hang%20dead%20hang%20shoulder%20decompression%20tutorial',
+  'Wall slides': 'https://www.youtube.com/results?search_query=wall%20slides%20shoulder%20mobility%20exercise%20tutorial',
+  'Doorway chest stretch': 'https://www.youtube.com/results?search_query=doorway%20chest%20stretch%20tutorial',
+  'Neck rolls': 'https://www.youtube.com/results?search_query=neck%20rolls%20mobility%20warm%20up%20tutorial',
+  'Band pull-aparts': 'https://www.youtube.com/results?search_query=band%20pull%20aparts%20shoulder%20health%20tutorial',
+  'Schouderrotaties met band': 'https://www.youtube.com/results?search_query=band%20shoulder%20rotation%20warm%20up%20tutorial',
+  'Dead bug': 'https://www.youtube.com/results?search_query=dead%20bug%20exercise%20core%20tutorial',
+  'Glute bridges': 'https://www.youtube.com/results?search_query=glute%20bridge%20exercise%20tutorial',
+  'Bird dog': 'https://www.youtube.com/results?search_query=bird%20dog%20exercise%20core%20stability%20tutorial',
+  'Hollow body rocks': 'https://www.youtube.com/results?search_query=hollow%20body%20rock%20core%20exercise%20tutorial',
+  'Hip thrusts': 'https://www.youtube.com/results?search_query=hip%20thrust%20exercise%20tutorial',
+  'Reverse snow angels': 'https://www.youtube.com/results?search_query=reverse%20snow%20angel%20exercise%20upper%20back%20tutorial',
+  'Jumping jacks': 'https://www.youtube.com/results?search_query=jumping%20jacks%20warm%20up%20exercise%20tutorial',
+  'High knees': 'https://www.youtube.com/results?search_query=high%20knees%20warm%20up%20cardio%20tutorial',
+  'Butt kicks': 'https://www.youtube.com/results?search_query=butt%20kicks%20warm%20up%20cardio%20tutorial',
+  'Skipping': 'https://www.youtube.com/results?search_query=skipping%20jump%20rope%20warm%20up%20tutorial',
+  'Lateral shuffles': 'https://www.youtube.com/results?search_query=lateral%20shuffle%20warm%20up%20exercise%20tutorial',
+  'Box breathing + jump': 'https://www.youtube.com/results?search_query=box%20breathing%20exercise%20tutorial',
 };
 
 const QUOTES = [
@@ -521,13 +554,86 @@ const QUOTES = [
 ];
 
 // 3-month progressive program — 4 workouts/week, each 60 min (15 warmup + 45 main)
-const WARMUP = [
-  { n: 'Air squats', s: '2×15', note: 'Mobiliteit heupen', yt: null },
-  { n: 'Asian squat hold', s: '2×30s', note: 'Enkels & heupen', yt: null },
-  { n: "World's greatest stretch", s: '2×5/kant', note: 'Full body mobiliteit', yt: null },
-  { n: 'Bar hang', s: '2×30s', note: 'Schouder decompressie', yt: null },
-  { n: 'Arm circles', s: '2×10/richting', note: 'Schouder warming up', yt: null }
-];
+// ── WARMUP POOL — elke dag een andere combinatie ─────────────
+// Verdeeld in categorieën zodat elke warmup gebalanceerd is:
+// 1 mobiliteit onderlichaam, 1 mobiliteit full body, 1 schouder/nek,
+// 1 activatie core/rug, 1 hartslag omhoog
+
+const WARMUP_POOL = {
+  onderlichaam: [
+    { n: 'Air squats', s: '2×15', note: 'Mobiliteit heupen & enkels' },
+    { n: 'Asian squat hold', s: '2×40s', note: 'Diepe squat, enkels & heupen' },
+    { n: 'Hip circles', s: '2×10/richting', note: 'Heupmobiliteit losdraaien' },
+    { n: 'Lunge met rotatie', s: '2×8/kant', note: 'Heup flexor & thoracale rotatie' },
+    { n: 'Squat to stand', s: '2×10', note: 'Hamstrings & heupen openen' },
+    { n: 'Lateral leg swings', s: '2×12/kant', note: 'Heupabductie mobiliteit' },
+    { n: 'Ankle circles', s: '2×10/kant', note: 'Enkelmobiliteit' },
+  ],
+  fullbody: [
+    { n: "World's greatest stretch", s: '2×5/kant', note: 'Full body mobiliteit' },
+    { n: 'Inchworm', s: '2×8', note: 'Hamstrings, schouders & core' },
+    { n: 'Cat-cow', s: '2×10', note: 'Wervelkolom mobiliteit' },
+    { n: 'Thoracic rotaties', s: '2×8/kant', note: 'Borstwervel rotatie' },
+    { n: 'Bear crawl', s: '2×10m', note: 'Full body activatie & coördinatie' },
+    { n: 'Hip 90/90 stretch', s: '2×30s/kant', note: 'Heupkapselmobiliteit' },
+    { n: 'Spiderman stretch', s: '2×6/kant', note: 'Heupflexor & thoracale mobiliteit' },
+  ],
+  schouder: [
+    { n: 'Arm circles', s: '2×12/richting', note: 'Schouder warming up' },
+    { n: 'Bar hang', s: '2×35s', note: 'Schouder decompressie & grip' },
+    { n: 'Schouderrotaties met band', s: '2×15', note: 'Rotator cuff activatie' },
+    { n: 'Wall slides', s: '2×12', note: 'Schouderblad mobiliteit' },
+    { n: 'Doorway chest stretch', s: '2×30s', note: 'Borst & voorste schouder openen' },
+    { n: 'Neck rolls', s: '2×5/richting', note: 'Nek & trapeziusmobiliteit' },
+    { n: 'Band pull-aparts', s: '2×15', note: 'Achterste schouder activeren' },
+  ],
+  core_rug: [
+    { n: 'Dead bug', s: '2×8/kant', note: 'Core activatie & stabiliteit' },
+    { n: 'Glute bridges', s: '2×15', note: 'Billen & lage rug activeren' },
+    { n: 'Superman holds', s: '2×10', note: 'Posterieure keten wakker maken' },
+    { n: 'Bird dog', s: '2×8/kant', note: 'Core & rug stabiliteit' },
+    { n: 'Hollow body rocks', s: '2×10', note: 'Anterior core activatie' },
+    { n: 'Hip thrusts', s: '2×12', note: 'Glutes & lage rug activeren' },
+    { n: 'Reverse snow angels', s: '2×12', note: 'Schouderbladen & rug activeren' },
+  ],
+  hartslag: [
+    { n: 'Jumping jacks', s: '2×20', note: 'Hartslag omhoog, full body warm' },
+    { n: 'High knees', s: '2×20s', note: 'Hartslag & been activatie' },
+    { n: 'Butt kicks', s: '2×20s', note: 'Hamstrings & hartslag' },
+    { n: 'Mountain climbers', s: '2×15', note: 'Core & hartslag activeren' },
+    { n: 'Skipping', s: '2×30s', note: 'Coördinatie & hartslag' },
+    { n: 'Lateral shuffles', s: '2×10m', note: 'Zijwaartse beweging & activatie' },
+    { n: 'Box breathing + jump', s: '2×8', note: 'Ademhaling & explosiviteit' },
+  ]
+};
+
+// Genereer een consistente maar dagelijks wisselende warming up
+// Gebruikt de datum als seed zodat dezelfde dag altijd dezelfde warmup toont
+function getDailyWarmup(isoDate) {
+  const seed = isoDate
+    ? isoDate.split('-').reduce((a, b) => a + parseInt(b), 0)
+    : new Date().getDate() + new Date().getMonth() * 31;
+
+  function pickOne(arr, offset) {
+    return arr[(seed + offset) % arr.length];
+  }
+
+  // Add yt link from YOUTUBE dict to each warmup exercise
+  const picked = [
+    pickOne(WARMUP_POOL.onderlichaam, 0),
+    pickOne(WARMUP_POOL.fullbody, 1),
+    pickOne(WARMUP_POOL.schouder, 2),
+    pickOne(WARMUP_POOL.core_rug, 3),
+    pickOne(WARMUP_POOL.hartslag, 4),
+  ];
+  return picked.map(ex => ({ ...ex, yt: YOUTUBE[ex.n] || null }));
+}
+
+// Legacy WARMUP for backward compatibility (Strava upload description)
+const WARMUP = WARMUP_POOL.onderlichaam.slice(0, 2)
+  .concat(WARMUP_POOL.fullbody.slice(0, 1))
+  .concat(WARMUP_POOL.schouder.slice(0, 2));
+
 
 const PHASES = [
   {
@@ -644,8 +750,8 @@ const PHASES = [
 ];
 
 const BM_EXERCISES = [
-  { n: 'Diamond push-ups', yt: 'https://www.youtube.com/watch?v=J0DXe9js1gs', unit: 'reps' },
-  { n: 'Pull-ups', yt: 'https://www.youtube.com/watch?v=eGo4IYlbE5g', unit: 'reps' }
+  { n: 'Diamond push-ups', yt: 'https://www.youtube.com/results?search_query=diamond%20push%20ups%20tutorial%20form', unit: 'reps' },
+  { n: 'Pull-ups', yt: 'https://www.youtube.com/results?search_query=pull%20up%20correct%20form%20tutorial%20beginners', unit: 'reps' }
 ];
 
 // ─── STATE ──────────────────────────────────────────────────────
@@ -779,7 +885,8 @@ function renderWorkout(phaseIdx, workoutIdx, dateStr) {
   const phase = PHASES[phaseIdx];
   const workout = phase.workouts[workoutIdx];
   const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-  let warmupRows = WARMUP.map((ex, i) => `
+  const todayWarmup = getDailyWarmup(state.activeDayIso);
+  let warmupRows = todayWarmup.map((ex, i) => `
     <div class="ex-row ${state.exChecks['w'+i] ? 'checked' : ''}">
       <div class="ex-num">${state.exChecks['w'+i] ? '✓' : i+1}</div>
       <div class="ex-info">
@@ -1216,7 +1323,7 @@ async function uploadToStrava(workoutData, exChecks) {
   const durationSeconds = 60 * 60; // 60 minuten
 
   // Build activity description with all completed exercises
-  const warmupLines = WARMUP.map((ex, i) =>
+  const warmupLines = getDailyWarmup(workoutData.isoDate).map((ex, i) =>
     exChecks?.['w'+i] ? `✓ ${ex.n} ${ex.s}` : `○ ${ex.n} ${ex.s}`
   ).join('\n');
 
@@ -1417,7 +1524,8 @@ async function uploadLogWorkout(workoutIdx, btn) {
   const workout = phase.workouts[w.workoutIdx];
 
   // Build exercise list for description
-  const warmupLines = WARMUP.map(ex => `✓ ${ex.n} ${ex.s}`).join('\n');
+  const logWarmup = getDailyWarmup(w.isoDate);
+  const warmupLines = logWarmup.map(ex => `✓ ${ex.n} ${ex.s}`).join('\n');
   const mainLines = workout.exercises.map(ex => `✓ ${ex.n} ${ex.s}`).join('\n');
 
   const desc = [
